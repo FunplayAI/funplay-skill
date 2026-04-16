@@ -1,12 +1,14 @@
 # FunPlay Skill
 
-FunPlay Skill is a game-development skills library for Claude Code, inspired by `obra/superpowers` but focused on art, audio, and asset-processing workflows instead of MCP servers.
+FunPlay Skill is a game-development skills library for coding agents, inspired by `obra/superpowers` but focused on art, audio, engine workflows, and asset-processing instead of MCP servers.
 
 ## What this repository is
 
-- A Claude Code plugin that delivers reusable game-development skills
+- A multi-agent skills library for game-development workflows
+- A Claude Code / Cursor plugin with native skills, commands, and hooks
+- A Codex, OpenCode, and Gemini compatible repository with install guides
 - A collection of local asset-processing workflows under `skills/`
-- A lightweight plugin shell with hooks, commands, docs, and tests
+- A lightweight plugin shell with adapters, hooks, commands, docs, and tests
 
 ## What is inside
 
@@ -28,7 +30,9 @@ FunPlay Skill is a game-development skills library for Claude Code, inspired by 
 
 ## Installation
 
-For local development, start Claude Code from this repository’s parent directory, then run:
+### Claude Code
+
+For local development, start Claude Code from this repository's parent directory, then run:
 
 - `/plugin marketplace add ./<your-checkout-dir>`
 - `/plugin install funplay-skill@funplay-skill`
@@ -36,6 +40,32 @@ For local development, start Claude Code from this repository’s parent directo
 You can also start a one-off session with:
 
 - `claude --plugin-dir /absolute/path/to/<your-checkout-dir>`
+
+### Cursor
+
+Install through Cursor's plugin support from this repository. The Cursor manifest lives at `.cursor-plugin/plugin.json`.
+
+### Codex
+
+Follow `.codex/INSTALL.md`. In short:
+
+- clone this repo
+- symlink `skills/` into your agent skills directory
+- restart Codex
+
+### OpenCode
+
+Follow `.opencode/INSTALL.md`. In short, add this Git plugin to `opencode.json`:
+
+```json
+{
+  "plugin": ["funplay-skill@git+https://github.com/FunplayAI/funplay-skill.git"]
+}
+```
+
+### Gemini CLI
+
+Install the extension from the repository URL. Gemini reads `gemini-extension.json` and `GEMINI.md`.
 
 ## Development commands
 

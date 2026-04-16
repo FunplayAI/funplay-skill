@@ -1,6 +1,6 @@
 ---
 name: using-funplay-skills
-description: Learn how to discover, choose, and apply FunPlay Skill workflows in a Claude Code session.
+description: Learn how to discover, choose, and apply FunPlay Skill workflows in an agent session.
 dependencies: []
 inputs:
   - user goal
@@ -28,4 +28,3 @@ Use this skill when the user needs help choosing the right FunPlay workflow or u
 - `sprite-sheet` for frame extraction from atlas-like images
 - `normal-map` for deriving tangent-space normal maps from diffuse textures
 - `audio-format-convert` for format conversion between `wav`, `ogg`, and `mp3`
-

@@ -4,7 +4,12 @@ import { describe, expect, it } from 'vitest';
 describe('repo structure', () => {
   it('keeps core plugin files present', () => {
     expect(existsSync('.claude-plugin/plugin.json')).toBe(true);
+    expect(existsSync('.cursor-plugin/plugin.json')).toBe(true);
+    expect(existsSync('.codex/INSTALL.md')).toBe(true);
+    expect(existsSync('.opencode/INSTALL.md')).toBe(true);
+    expect(existsSync('gemini-extension.json')).toBe(true);
     expect(existsSync('hooks/hooks.json')).toBe(true);
+    expect(existsSync('hooks/hooks-cursor.json')).toBe(true);
     expect(existsSync('docs/skill-spec.md')).toBe(true);
   });
 
@@ -12,7 +17,19 @@ describe('repo structure', () => {
     const plugin = JSON.parse(readFileSync('.claude-plugin/plugin.json', 'utf8'));
     expect(plugin.name).toBe('funplay-skill');
     expect(plugin.skills).toBe('./skills/');
+    expect(plugin.commands).toBe('./commands/');
     expect(plugin.mcpServers).toBeUndefined();
+  });
+
+  it('declares matching cursor and gemini adapters', () => {
+    const cursor = JSON.parse(readFileSync('.cursor-plugin/plugin.json', 'utf8'));
+    const gemini = JSON.parse(readFileSync('gemini-extension.json', 'utf8'));
+
+    expect(cursor.name).toBe('funplay-skill');
+    expect(cursor.skills).toBe('./skills/');
+    expect(cursor.commands).toBe('./commands/');
+    expect(gemini.name).toBe('funplay-skill');
+    expect(gemini.contextFileName).toBe('GEMINI.md');
   });
 
   it('ships command wrappers and engine-oriented skills', () => {

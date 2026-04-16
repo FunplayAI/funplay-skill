@@ -1,14 +1,13 @@
 {
   "name": "funplay-skill",
   "owner": {
-    "name": "FunseaAI"
+    "name": "FunplayAI"
   },
   "plugins": [
     {
       "name": "funplay-skill",
       "source": "./",
-      "description": "Game-development skills library for Claude Code."
+      "description": "Game-development skills library for coding agents."
     }
   ]
 }
-
