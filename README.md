@@ -59,7 +59,7 @@ Follow `.opencode/INSTALL.md`. In short, add this Git plugin to `opencode.json`:
 
 ```json
 {
-  "plugin": ["funplay-skill@git+https://github.com/winlifes/funplay-skill.git"]
+  "plugin": ["funplay-skill@git+https://github.com/FunplayAI/funplay-skill.git"]
 }
 ```
 
@@ -109,4 +109,4 @@ Install the extension from the repository URL. Gemini reads `gemini-extension.js
 
 The repository is initialized with:
 
-- `origin https://github.com/winlifes/funplay-skill.git`
+- `origin https://github.com/FunplayAI/funplay-skill.git`

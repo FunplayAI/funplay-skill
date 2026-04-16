@@ -4,7 +4,7 @@ Add FunPlay Skill to the `plugin` array in your global or project-level `opencod
 
 ```json
 {
-  "plugin": ["funplay-skill@git+https://github.com/winlifes/funplay-skill.git"]
+  "plugin": ["funplay-skill@git+https://github.com/FunplayAI/funplay-skill.git"]
 }
 ```
 
@@ -25,7 +25,7 @@ OpenCode updates Git plugins on restart. Pin a version by adding a tag:
 
 ```json
 {
-  "plugin": ["funplay-skill@git+https://github.com/winlifes/funplay-skill.git#v0.1.0"]
+  "plugin": ["funplay-skill@git+https://github.com/FunplayAI/funplay-skill.git#v0.1.0"]
 }
 ```
 

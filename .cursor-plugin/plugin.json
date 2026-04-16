@@ -4,10 +4,10 @@
   "description": "Game-development skills library for coding agents.",
   "version": "0.1.0",
   "author": {
-    "name": "winlifes"
+    "name": "FunplayAI"
   },
-  "homepage": "https://github.com/winlifes/funplay-skill",
-  "repository": "https://github.com/winlifes/funplay-skill",
+  "homepage": "https://github.com/FunplayAI/funplay-skill",
+  "repository": "https://github.com/FunplayAI/funplay-skill",
   "license": "MIT",
   "keywords": [
     "game-dev",
