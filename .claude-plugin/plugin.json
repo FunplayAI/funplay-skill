@@ -1,0 +1,13 @@
+{
+  "name": "funplay-skill",
+  "version": "0.1.0",
+  "description": "Game-development skills library for Claude Code.",
+  "repository": "https://github.com/FunseaAI/funplay-skill",
+  "keywords": ["game-dev", "skills", "art-pipeline", "audio"],
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
+  "author": {
+    "name": "FunseaAI"
+  }
+}
+

@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+import { existsSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
+
+const pluginRoot = process.env.CLAUDE_PLUGIN_ROOT ?? process.cwd();
+const envFile = process.env.CLAUDE_ENV_FILE;
+const skillsRoot = join(pluginRoot, 'skills');
+const commandsRoot = join(pluginRoot, 'commands');
+
+const skills = existsSync(skillsRoot)
+  ? readdirSync(skillsRoot, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name)
+  : [];
+
+const commands = existsSync(commandsRoot)
+  ? readdirSync(commandsRoot, { withFileTypes: true })
+      .filter((entry) => entry.isFile() || entry.isDirectory())
+      .map((entry) => entry.name)
+  : [];
+
+if (envFile) {
+  process.stdout.write('');
+  await import('node:fs/promises').then(({ appendFile }) =>
+    appendFile(
+      envFile,
+      `export PATH="$PATH:${pluginRoot}/node_modules/.bin"\nexport NODE_PATH="${pluginRoot}/node_modules"\n`
+    )
+  );
+}
+
+const additionalContext = [
+  `FunPlay Skill plugin root: ${pluginRoot}`,
+  `Skills: ${skills.join(', ') || 'none yet'}`,
+  `Commands: ${commands.join(', ') || 'none yet'}`,
+  'Preferred workspace commands: npx pnpm install, npx pnpm test.',
+  'This repository is skills-only: do not expect MCP servers or remote-provider setup here.',
+  'Use docs/skill-spec.md when creating or editing a skill.'
+].join('\n');
+
+process.stdout.write(
+  JSON.stringify({
+    hookSpecificOutput: {
+      hookEventName: 'SessionStart',
+      additionalContext
+    }
+  })
+);
