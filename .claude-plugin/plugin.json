@@ -2,8 +2,8 @@
   "name": "funplay-skill",
   "version": "0.1.0",
   "description": "Game-development skills library for coding agents.",
-  "repository": "https://github.com/FunplayAI/funplay-skill",
-  "homepage": "https://github.com/FunplayAI/funplay-skill",
+  "repository": "https://github.com/winlifes/funplay-skill",
+  "homepage": "https://github.com/winlifes/funplay-skill",
   "license": "MIT",
   "keywords": ["game-dev", "skills", "art-pipeline", "audio"],
   "skills": "./skills/",
@@ -11,6 +11,6 @@
   "commands": "./commands/",
   "hooks": "./hooks/hooks.json",
   "author": {
-    "name": "FunplayAI"
+    "name": "winlifes"
   }
 }
