@@ -21,12 +21,14 @@ FunPlay Skill is a game-development skills library for coding agents, inspired b
 - `skills/using-funplay-skills`: onboarding and usage guidance for the library
 - `skills/gameplay-prototyping`: turn a rough game idea into a prototype-ready spec
 - `skills/level-design-review`: review flow, readability, and encounter pacing
+- `skills/unity-mcp-workflow`: use Funplay Unity MCP as the edit, compile, Play Mode, screenshot, and readback loop
 - `skills/unity-prefab-workflow`: safely edit Unity prefabs, scenes, and serialized assets
 - `skills/godot-scene-assembly`: structure Godot scenes and resources cleanly
 - `skills/cocos-component-workflow`: organize Cocos Creator prefabs, scripts, and assets
 - `hooks/`: session-start context injection
 - `commands/`: lightweight slash-command wrappers that route users to the right skill
 - `docs/skill-spec.md`: canonical skill authoring rules
+- `CONTRIBUTING.md`, `CHANGELOG.md`, and `RELEASE_CHECKLIST.md`: contributor and release workflow docs
 
 ## Installation
 
@@ -73,6 +75,8 @@ Install the extension from the repository URL. Gemini reads `gemini-extension.js
 - `npx pnpm test`: run repository tests
 - `npx pnpm validate:workspace`: verify required files and folders
 
+CI runs the same test and workspace validation commands.
+
 ## Using the skills
 
 - `sprite-sheet`: `node skills/sprite-sheet/scripts/slice.mjs <image> <rows> <cols>`
@@ -83,6 +87,7 @@ Install the extension from the repository URL. Gemini reads `gemini-extension.js
 - `game-audio-polish`: ask the agent to review SFX or music for loudness, loop quality, and implementation concerns
 - `gameplay-prototyping`: ask the agent to turn a game idea into a shippable prototype plan
 - `level-design-review`: ask the agent to critique level goals, player guidance, and combat/readability loops
+- `unity-mcp-workflow`: use when a Unity project is connected to Funplay MCP and needs compile, Play Mode, screenshot, hierarchy, console, or prefab/scene readback verification
 - `unity-prefab-workflow`: use when touching Unity YAML assets, prefabs, or scenes
 - `godot-scene-assembly`: use when organizing Godot `.tscn`, nodes, and exported resources
 - `cocos-component-workflow`: use when editing Cocos Creator prefabs, components, and asset references

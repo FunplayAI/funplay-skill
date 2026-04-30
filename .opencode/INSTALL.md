@@ -25,7 +25,6 @@ OpenCode updates Git plugins on restart. Pin a version by adding a tag:
 
 ```json
 {
-  "plugin": ["funplay-skill@git+https://github.com/FunplayAI/funplay-skill.git#v0.1.0"]
+  "plugin": ["funplay-skill@git+https://github.com/FunplayAI/funplay-skill.git#v0.2.0"]
 }
 ```
-

@@ -28,3 +28,7 @@ Use this skill when the user needs help choosing the right FunPlay workflow or u
 - `sprite-sheet` for frame extraction from atlas-like images
 - `normal-map` for deriving tangent-space normal maps from diffuse textures
 - `audio-format-convert` for format conversion between `wav`, `ogg`, and `mp3`
+- `unity-mcp-workflow` for Unity projects connected to Funplay MCP where the agent should verify editor state, compilation, Play Mode behavior, screenshots, and console output
+- `unity-prefab-workflow` for Unity prefab, scene, material, or serialized YAML safety when MCP is not the main validation loop
+- `godot-scene-assembly` for Godot scene, node, and resource structure
+- `cocos-component-workflow` for Cocos Creator prefab, component, and asset-reference structure
