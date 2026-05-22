@@ -1,4 +1,6 @@
+.DS_Store
 node_modules/
+.pnpm-store/
 dist/
 .turbo/
 .cache/
@@ -6,6 +8,5 @@ dist/
 .env.local
 coverage/
 tmp/
+temp/
 *.log
-.DS_Store
-

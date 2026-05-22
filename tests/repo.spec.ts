@@ -7,6 +7,7 @@ describe('repo structure', () => {
     expect(existsSync('.claude-plugin/plugin.json')).toBe(true);
     expect(existsSync('.cursor-plugin/plugin.json')).toBe(true);
     expect(existsSync('.codex/INSTALL.md')).toBe(true);
+    expect(existsSync('.gitignore')).toBe(true);
     expect(existsSync('.opencode/INSTALL.md')).toBe(true);
     expect(existsSync('.github/pull_request_template.md')).toBe(true);
     expect(existsSync('.github/workflows/ci.yml')).toBe(true);
@@ -39,20 +40,9 @@ describe('repo structure', () => {
   });
 
   it('ships command wrappers and engine-oriented skills', () => {
-    expect(existsSync('commands/brainstorm-game.md')).toBe(true);
-    expect(existsSync('commands/write-game-plan.md')).toBe(true);
-    expect(existsSync('commands/review-level.md')).toBe(true);
     expect(existsSync('commands/engine-workflow.md')).toBe(true);
-    expect(existsSync('commands/prototype-loop.md')).toBe(true);
-    expect(existsSync('commands/review-encounter.md')).toBe(true);
     expect(existsSync('commands/engine-safe-edit.md')).toBe(true);
     expect(existsSync('skills/unity-mcp-workflow/SKILL.md')).toBe(true);
-    expect(existsSync('skills/unity-prefab-workflow/SKILL.md')).toBe(true);
-    expect(existsSync('skills/godot-scene-assembly/SKILL.md')).toBe(true);
-    expect(existsSync('skills/cocos-component-workflow/SKILL.md')).toBe(true);
-    expect(existsSync('skills/texture-atlas/SKILL.md')).toBe(true);
-    expect(existsSync('skills/ui-slicing-checklist/SKILL.md')).toBe(true);
-    expect(existsSync('skills/game-audio-polish/SKILL.md')).toBe(true);
   });
 
   it('keeps every skill documented with complete metadata', () => {
@@ -79,5 +69,31 @@ describe('repo structure', () => {
       expect(declaredName).toBe(skillName);
       expect(readme, `README.md should list skills/${skillName}`).toContain(`skills/${skillName}`);
     }
+  });
+
+  it('ships only validated skills', () => {
+    const expectedSkillDirs = [
+      'audio-format-convert',
+      'normal-map',
+      'sprite-sheet',
+      'unity-mcp-workflow',
+      'using-funplay-skills'
+    ];
+    const actualSkillDirs = readdirSync('skills', { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name)
+      .sort();
+
+    expect(actualSkillDirs).toEqual(expectedSkillDirs);
+
+    const skillTests = readFileSync('tests/skills.spec.ts', 'utf8');
+    for (const skillName of ['audio-format-convert', 'normal-map', 'sprite-sheet']) {
+      expect(existsSync(join('skills', skillName, 'scripts')), `${skillName} should have scripts`).toBe(true);
+      expect(skillTests, `${skillName} should have script tests`).toContain(`../skills/${skillName}/`);
+    }
+
+    const unitySkill = readFileSync('skills/unity-mcp-workflow/SKILL.md', 'utf8');
+    expect(unitySkill).toContain('FunplayAI/funplay-unity-mcp');
+    expect(unitySkill).toContain('3ef233a8a86eb03a281873b778d79bbfb1e3e899');
   });
 });

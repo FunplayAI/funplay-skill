@@ -6,6 +6,17 @@ This project follows a simple changelog format inspired by Keep a Changelog, and
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-05-21
+
+### Changed
+
+- Updated `unity-mcp-workflow` from the latest `FunplayAI/funplay-unity-mcp` default project skill guidance.
+- Tightened the skill validation policy so shipped skills must have tests/scripts, verified upstream provenance, or be a required meta-routing skill.
+
+### Removed
+
+- Removed unverified advisory skills and their command wrappers until they have a validation surface.
+
 ## [0.2.0] - 2026-04-30
 
 ### Added

@@ -8,6 +8,6 @@ Then:
 
 1. Determine whether the project is Unity, Godot, or Cocos Creator.
 2. Route Unity projects connected to Funplay MCP to `unity-mcp-workflow` when live editor readback, compilation, Play Mode, screenshots, or console logs are needed.
-3. Route Unity serialized file-only work to `unity-prefab-workflow`, Godot work to `godot-scene-assembly`, and Cocos Creator work to `cocos-component-workflow`.
+3. For Unity without MCP, Godot, or Cocos Creator, say there is no verified FunPlay skill currently available and continue with normal cautious repository inspection.
 4. Ask the user to confirm high-risk editor-generated files before broad edits.
 5. End with a short verification checklist for the chosen engine.

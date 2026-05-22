@@ -6,6 +6,7 @@ const requiredPaths = [
   '.claude-plugin/marketplace.json',
   '.cursor-plugin/plugin.json',
   '.codex/INSTALL.md',
+  '.gitignore',
   '.github/pull_request_template.md',
   '.github/workflows/ci.yml',
   '.opencode/INSTALL.md',
@@ -23,29 +24,21 @@ const requiredPaths = [
   'skills/sprite-sheet/SKILL.md',
   'skills/normal-map/SKILL.md',
   'skills/audio-format-convert/SKILL.md',
-  'skills/texture-atlas/SKILL.md',
-  'skills/ui-slicing-checklist/SKILL.md',
-  'skills/game-audio-polish/SKILL.md',
   'skills/using-funplay-skills/SKILL.md',
-  'skills/gameplay-prototyping/SKILL.md',
-  'skills/level-design-review/SKILL.md',
   'skills/unity-mcp-workflow/SKILL.md',
-  'skills/unity-prefab-workflow/SKILL.md',
-  'skills/godot-scene-assembly/SKILL.md',
-  'skills/cocos-component-workflow/SKILL.md',
   'commands/README.md',
-  'commands/brainstorm-game.md',
-  'commands/write-game-plan.md',
-  'commands/review-level.md',
   'commands/engine-workflow.md',
-  'commands/prototype-loop.md',
-  'commands/review-encounter.md',
   'commands/engine-safe-edit.md',
   'agents/README.md'
 ];
 
+const verifiedUpstreamSkills = new Set(['unity-mcp-workflow']);
+const metaSkills = new Set(['using-funplay-skills']);
+
 const errors = [];
 const missing = requiredPaths.filter((path) => !existsSync(path));
+const forbiddenNames = new Set(['.DS_Store']);
+const forbiddenDirs = new Set(['Library', 'Temp', 'temp', 'tmp', '.idea']);
 
 if (missing.length > 0) {
   for (const path of missing) {
@@ -55,6 +48,7 @@ if (missing.length > 0) {
 
 const skillsRoot = 'skills';
 const readme = existsSync('README.md') ? readFileSync('README.md', 'utf8') : '';
+const skillTests = existsSync('tests/skills.spec.ts') ? readFileSync('tests/skills.spec.ts', 'utf8') : '';
 const frontmatterKeys = ['name', 'description', 'dependencies', 'inputs', 'outputs', 'examples'];
 
 if (existsSync(skillsRoot)) {
@@ -94,7 +88,50 @@ if (existsSync(skillsRoot)) {
     if (!readme.includes(`skills/${skillName}`)) {
       errors.push(`README.md does not list skills/${skillName}`);
     }
+
+    const hasScripts = existsSync(join(skillsRoot, skillName, 'scripts'));
+    const hasScriptTests = skillTests.includes(`../skills/${skillName}/`);
+    const hasUpstreamSource = text.includes('Source') && text.includes('FunplayAI/funplay-unity-mcp');
+    const passesValidationGate =
+      (hasScripts && hasScriptTests) ||
+      (verifiedUpstreamSkills.has(skillName) && hasUpstreamSource) ||
+      metaSkills.has(skillName);
+
+    if (!passesValidationGate) {
+      errors.push(
+        `${skillPath} is not validated: add scripts plus tests, verified upstream source metadata, or mark it as a meta skill`
+      );
+    }
   }
+}
+
+function collectJunkPaths(root) {
+  if (!existsSync(root)) {
+    return [];
+  }
+
+  const junk = [];
+  const visit = (directory) => {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      const path = join(directory, entry.name);
+      if (path.includes(`${join('', 'node_modules')}/`) || path === 'node_modules') {
+        continue;
+      }
+      if (forbiddenNames.has(entry.name) || (entry.isDirectory() && forbiddenDirs.has(entry.name))) {
+        junk.push(path);
+        continue;
+      }
+      if (entry.isDirectory() && entry.name !== '.git') {
+        visit(path);
+      }
+    }
+  };
+  visit(root);
+  return junk;
+}
+
+for (const path of collectJunkPaths('.')) {
+  errors.push(`Repository contains local junk path: ${path}`);
 }
 
 if (errors.length > 0) {

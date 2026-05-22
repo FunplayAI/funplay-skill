@@ -8,6 +8,4 @@ Then:
 
 1. Ask which engine or project type is in scope if it is not already obvious.
 2. Use `unity-mcp-workflow` when a Unity project is connected to Funplay MCP and live editor verification is needed.
-3. Use `unity-prefab-workflow` for Unity scenes, prefabs, materials, and serialized assets when MCP is not the main loop.
-4. Use `godot-scene-assembly` for Godot scenes, nodes, resources, and exported properties.
-5. Use `cocos-component-workflow` for Cocos Creator prefabs, components, and asset references.
+3. For non-Unity-MCP engine work, say there is no verified FunPlay skill currently available and continue with normal project-specific inspection.

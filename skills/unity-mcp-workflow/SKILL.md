@@ -9,7 +9,7 @@ inputs:
   - gameplay, UI, asset, or code change goal
 outputs:
   - MCP-grounded edit workflow
-  - Unity readback and validation evidence
+  - structured Unity readback and validation evidence
   - remaining manual or device validation notes
 examples:
   - Ask the agent to update a Unity UI prefab, recompile, enter Play Mode, capture a screenshot, and report console errors.
@@ -19,7 +19,7 @@ examples:
 
 Use this skill when an agent is working in a Unity project connected to Funplay MCP for Unity and needs to verify code, prefabs, UI, Play Mode behavior, screenshots, scene hierarchy, console logs, domain reloads, or MCP connection issues.
 
-This is the default project workflow skill shipped by `FunplayAI/funplay-unity-mcp`.
+This tracks the default project workflow skill shipped by `FunplayAI/funplay-unity-mcp`.
 
 ## Operating Loop
 
@@ -44,9 +44,24 @@ This is the default project workflow skill shipped by `FunplayAI/funplay-unity-m
    - For runtime behavior, enter Play Mode or inspect live objects when needed.
    - Report exactly what was verified and what still requires device, store, network, or manual validation.
 
+## Structured Results
+
+- Tool returns are structured JSON: `{success, message, data}` for success and `{success: false, code, error, data}` for errors.
+- Branch on `code` values such as `OBJECT_NOT_FOUND` instead of matching free-form text.
+- Prefer `instanceId`, `componentInstanceId`, and `fileID` values returned by tools for follow-up calls. Treat them as strings because newer Unity versions may return EntityId text instead of numeric InstanceIDs.
+- Pass object identity back with `find_method=by_id` when available. Auto-detect usually treats integers as IDs, slashed strings as paths, and other strings as names, but explicit `find_method` is clearer when the target matters.
+- When a GameObject has multiple components of the same type, target the desired component with `component_instance_id`.
+
+## Editor Tools First
+
+- Read editor state through dedicated tools before writing snippets: `get_editor_state`, `get_selection`, `set_selection`, `get_prefab_stage`, `get_tags`, `get_layers`, and `get_build_settings`.
+- Use `find_game_objects`, `list_components`, `get_component_properties`, `set_component_property`, and `set_component_properties` for object/component work when exposed.
+- `set_component_property` and `set_component_properties` write through `SerializedObject`, so `[SerializeField] private` fields are reachable. Pass object references as `{"fileID": "<instanceId>"}` or `{"assetPath": "Assets/..."}`.
+- When no specialized tool covers an editor action, try `execute_menu_item` before falling back to ad-hoc `execute_code`.
+
 ## Tool Exposure
 
-- With the default `core` profile, rely on the focused workflow tools: `execute_code`, recompilation, Play Mode control, hierarchy, console logs, screenshots, input simulation, and performance inspection.
+- With the default `core` profile, rely on focused workflow tools: `execute_code`, recompilation, Play Mode control, hierarchy, console logs, screenshots, input simulation, performance inspection, editor state reads, object/component inspection, component setters, and `execute_menu_item`.
 - With the default `full` profile, prefer specific MCP tools for simple scene, asset, GameObject, component, prefab, camera, UI, package, animation, file, or visual-feedback operations.
 - If Tool Exposure is customized and a named tool is unavailable, adapt to the exposed tool list and report which expected tool is missing.
 
@@ -60,18 +75,26 @@ curl -sS -m 1 -X POST http://127.0.0.1:8765/mcp \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}'
 ```
 
-For multi-line `execute_code` calls over `curl`, generate JSON with a real encoder instead of hand-escaping C#:
+For multi-line `execute_code` calls over `curl`, generate JSON with a real encoder instead of hand-escaping C#.
+
+Prefer the `IFunplayCommand` template for new snippets so object creation, modification, deletion, and logging flow through the MCP execution context:
 
 ```bash
 node - <<'NODE'
 const code = String.raw`
 using UnityEngine;
+using Funplay.Editor.Tools.Scripting;
 
-public class InspectSomething
+public class InspectSomething : IFunplayCommand
 {
-    public static string Run()
+    public string Execute(ExecutionContext ctx)
     {
         var obj = GameObject.Find("PracticeInGameUiRoot");
+        if (obj != null)
+        {
+            ctx.RegisterObjectModification(obj, "Inspect UI root");
+            ctx.Log("Found " + obj.name);
+        }
         return obj != null ? obj.name : "not found";
     }
 }
@@ -155,12 +178,17 @@ return "Scene saved: size " + before + " -> " + rect.sizeDelta;
 
 After external C# or asset file edits:
 
-1. Call `request_recompile`.
-2. Call `wait_for_compilation`.
-3. Read console or compilation errors before continuing.
-4. If a domain reload drops the request, call `get_reload_recovery_status` when available, re-scan the MCP endpoint if needed, then continue from `wait_for_compilation`.
+1. If Unity is in Play Mode, call `exit_play_mode` first. `request_recompile` is rejected during play because Unity does not run script compilation or domain reloads while playing.
+2. Call `request_recompile` for tools that depend on freshly compiled code.
+3. Call `wait_for_compilation`.
+4. Read console or compilation errors before continuing.
+5. If a domain reload drops the request, call `get_reload_recovery_status` when available, re-scan the MCP endpoint if needed, then continue from `wait_for_compilation`.
 
 Do not treat a disconnected request as a successful compile.
+
+`execute_code` refreshes the asset database and waits for compilation before compiling the snippet, so it usually picks up external file edits automatically. Other tools that depend on current assemblies still need the explicit recompile path above.
+
+After `enter_play_mode`, the HTTP server is briefly unreachable while Unity reloads the domain. Before issuing the next tool call, poll a cheap endpoint such as `tools/list` or `get_reload_recovery_status` until you get a response.
 
 ## Verification Checklist
 
@@ -202,4 +230,4 @@ For gameplay or network work, verify object identity, ownership, live instance e
 ## Source
 
 - Original default skill: `FunplayAI/funplay-unity-mcp`
-- Upstream reference checked: `69743b4a87605611f1bf12e1f1a76f1dba94708d`
+- Upstream reference checked: `3ef233a8a86eb03a281873b778d79bbfb1e3e899`
