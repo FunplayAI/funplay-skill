@@ -8,6 +8,7 @@ Every skill lives in its own directory under `skills/` and must include a `SKILL
 ---
 name: sprite-sheet
 description: Slice a sprite sheet into single-frame images.
+category: asset-processing
 dependencies:
   - sharp
 inputs:
@@ -25,6 +26,7 @@ examples:
 
 - Write for agent consumption first: short, direct, explicit instructions.
 - Describe when to use the skill, not just what the script does.
+- Set `category` to one of `asset-processing`, `game-build-workflow`, `engine-workflow`, or `meta-routing`.
 - List runtime dependencies, including system tools such as `ffmpeg`.
 - Document accepted input formats, produced outputs, and common failure cases.
 - Keep scripts deterministic so repeated runs generate predictable filenames.

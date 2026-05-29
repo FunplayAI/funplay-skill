@@ -24,6 +24,7 @@ const requiredPaths = [
   'skills/sprite-sheet/SKILL.md',
   'skills/normal-map/SKILL.md',
   'skills/audio-format-convert/SKILL.md',
+  'skills/playable-game-build-flow/SKILL.md',
   'skills/using-funplay-skills/SKILL.md',
   'skills/unity-mcp-workflow/SKILL.md',
   'commands/README.md',
@@ -49,7 +50,13 @@ if (missing.length > 0) {
 const skillsRoot = 'skills';
 const readme = existsSync('README.md') ? readFileSync('README.md', 'utf8') : '';
 const skillTests = existsSync('tests/skills.spec.ts') ? readFileSync('tests/skills.spec.ts', 'utf8') : '';
-const frontmatterKeys = ['name', 'description', 'dependencies', 'inputs', 'outputs', 'examples'];
+const frontmatterKeys = ['name', 'description', 'category', 'dependencies', 'inputs', 'outputs', 'examples'];
+const allowedCategories = new Set([
+  'asset-processing',
+  'game-build-workflow',
+  'engine-workflow',
+  'meta-routing'
+]);
 
 if (existsSync(skillsRoot)) {
   for (const entry of readdirSync(skillsRoot, { withFileTypes: true })) {
@@ -83,6 +90,12 @@ if (existsSync(skillsRoot)) {
     const declaredName = nameMatch?.[1]?.trim().replace(/^["']|["']$/g, '');
     if (declaredName !== skillName) {
       errors.push(`${skillPath} declares name "${declaredName}" but directory is "${skillName}"`);
+    }
+
+    const categoryMatch = frontmatter.match(/^category:\s*(.+)$/m);
+    const declaredCategory = categoryMatch?.[1]?.trim().replace(/^["']|["']$/g, '');
+    if (!allowedCategories.has(declaredCategory)) {
+      errors.push(`${skillPath} declares invalid category "${declaredCategory}"`);
     }
 
     if (!readme.includes(`skills/${skillName}`)) {

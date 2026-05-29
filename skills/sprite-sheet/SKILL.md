@@ -1,6 +1,7 @@
 ---
 name: sprite-sheet
 description: Slice a sprite sheet into single-frame PNG files.
+category: asset-processing
 dependencies:
   - sharp
 inputs:
@@ -20,4 +21,3 @@ Use this skill when you need to split one atlas-style sprite sheet into uniforml
 - Input formats: PNG, JPG, WebP, and other formats supported by `sharp`
 - Output format: PNG frames
 - Failure cases: missing file, non-positive row/column counts, or dimensions that do not divide evenly
-

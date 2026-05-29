@@ -47,7 +47,13 @@ describe('repo structure', () => {
 
   it('keeps every skill documented with complete metadata', () => {
     const readme = readFileSync('README.md', 'utf8');
-    const requiredKeys = ['name', 'description', 'dependencies', 'inputs', 'outputs', 'examples'];
+    const requiredKeys = ['name', 'description', 'category', 'dependencies', 'inputs', 'outputs', 'examples'];
+    const allowedCategories = new Set([
+      'asset-processing',
+      'game-build-workflow',
+      'engine-workflow',
+      'meta-routing'
+    ]);
     const skillDirs = readdirSync('skills', { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name);
@@ -66,8 +72,26 @@ describe('repo structure', () => {
       }
 
       const declaredName = frontmatter.match(/^name:\s*(.+)$/m)?.[1]?.trim().replace(/^["']|["']$/g, '');
+      const declaredCategory = frontmatter.match(/^category:\s*(.+)$/m)?.[1]?.trim().replace(/^["']|["']$/g, '');
       expect(declaredName).toBe(skillName);
+      expect(allowedCategories.has(declaredCategory ?? '')).toBe(true);
       expect(readme, `README.md should list skills/${skillName}`).toContain(`skills/${skillName}`);
+    }
+  });
+
+  it('keeps skill categories stable', () => {
+    const expectedCategories = {
+      'audio-format-convert': 'asset-processing',
+      'normal-map': 'asset-processing',
+      'playable-game-build-flow': 'game-build-workflow',
+      'sprite-sheet': 'asset-processing',
+      'unity-mcp-workflow': 'engine-workflow',
+      'using-funplay-skills': 'meta-routing'
+    };
+
+    for (const [skillName, category] of Object.entries(expectedCategories)) {
+      const text = readFileSync(join('skills', skillName, 'SKILL.md'), 'utf8');
+      expect(text).toMatch(new RegExp(`^category:\\s+${category}$`, 'm'));
     }
   });
 
@@ -75,6 +99,7 @@ describe('repo structure', () => {
     const expectedSkillDirs = [
       'audio-format-convert',
       'normal-map',
+      'playable-game-build-flow',
       'sprite-sheet',
       'unity-mcp-workflow',
       'using-funplay-skills'
@@ -87,7 +112,7 @@ describe('repo structure', () => {
     expect(actualSkillDirs).toEqual(expectedSkillDirs);
 
     const skillTests = readFileSync('tests/skills.spec.ts', 'utf8');
-    for (const skillName of ['audio-format-convert', 'normal-map', 'sprite-sheet']) {
+    for (const skillName of ['audio-format-convert', 'normal-map', 'playable-game-build-flow', 'sprite-sheet']) {
       expect(existsSync(join('skills', skillName, 'scripts')), `${skillName} should have scripts`).toBe(true);
       expect(skillTests, `${skillName} should have script tests`).toContain(`../skills/${skillName}/`);
     }

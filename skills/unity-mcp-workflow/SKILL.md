@@ -1,6 +1,7 @@
 ---
 name: unity-mcp-workflow
 description: Use Funplay Unity MCP to edit, import, compile, inspect, and test Unity projects safely.
+category: engine-workflow
 dependencies:
   - Funplay MCP for Unity
 inputs:

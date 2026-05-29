@@ -12,11 +12,26 @@ FunPlay Skill is a game-development skills library for coding agents, inspired b
 
 ## What is inside
 
+### Asset Processing
+
 - `skills/sprite-sheet`: split one sprite sheet into numbered frame images
 - `skills/normal-map`: generate a normal map from a diffuse texture
 - `skills/audio-format-convert`: convert audio between `wav`, `ogg`, and `mp3`
-- `skills/using-funplay-skills`: onboarding and usage guidance for the library
+
+### Game Build Workflow
+
+- `skills/playable-game-build-flow`: guide a small browser game from intent capture to a playable vertical slice
+
+### Engine Workflow
+
 - `skills/unity-mcp-workflow`: use Funplay Unity MCP as the edit, compile, Play Mode, screenshot, and readback loop
+
+### Meta Routing
+
+- `skills/using-funplay-skills`: onboarding and usage guidance for the library
+
+### Repository Support
+
 - `hooks/`: session-start context injection
 - `commands/`: lightweight slash-command wrappers that route users to the right skill
 - `docs/skill-spec.md`: canonical skill authoring rules
@@ -71,10 +86,23 @@ CI runs the same test and workspace validation commands.
 
 ## Using the skills
 
+### Asset Processing
+
 - `sprite-sheet`: `node skills/sprite-sheet/scripts/slice.mjs <image> <rows> <cols>`
 - `normal-map`: `node skills/normal-map/scripts/generate.mjs <image>`
 - `audio-format-convert`: `node skills/audio-format-convert/scripts/convert.mjs <input> <format>`
+
+### Game Build Workflow
+
+- `playable-game-build-flow`: guide a small browser game from a one-sentence idea to a playable vertical slice, with `node skills/playable-game-build-flow/scripts/validate-pillar.mjs <pillar.md>` for pillar-contract checks
+
+### Engine Workflow
+
 - `unity-mcp-workflow`: use when a Unity project is connected to Funplay MCP and needs compile, Play Mode, screenshot, hierarchy, console, or prefab/scene readback verification
+
+### Meta Routing
+
+- `using-funplay-skills`: ask which verified FunPlay skill should be used for the current goal
 
 ## Commands
 

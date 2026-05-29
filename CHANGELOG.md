@@ -6,6 +6,11 @@ This project follows a simple changelog format inspired by Keep a Changelog, and
 
 ## [Unreleased]
 
+### Added
+
+- Added `playable-game-build-flow`, a verified browser-game vertical-slice workflow adapted from the Zaohua workflow notes with a pillar-contract validator.
+- Added explicit skill categories and validation for category metadata.
+
 ## [0.3.0] - 2026-05-21
 
 ### Changed
