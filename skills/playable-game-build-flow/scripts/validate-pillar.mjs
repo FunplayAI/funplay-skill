@@ -3,6 +3,7 @@ import { basename } from 'node:path';
 
 const requiredHeadings = [
   'Intent',
+  'Creative North Star',
   'Core Fun',
   'Pillars',
   'Core Loop',
@@ -47,6 +48,15 @@ export function validatePillarContract(text, options = {}) {
     errors.push(`Intent should contain 3-8 bullets, found ${intentBullets}.`);
   }
 
+  const creativeNorthStar = sectionAfter(text, 'Creative North Star').trim();
+  const creativeNorthStarWords = creativeNorthStar.split(/\s+/).filter(Boolean).length;
+  if (creativeNorthStarWords < 10 || creativeNorthStarWords > 80) {
+    errors.push(`Creative North Star should contain 10-80 words, found ${creativeNorthStarWords}.`);
+  }
+  if (!/(signature|first[-\s]?minute|memorable|remember|feeling|fantasy|taste|boundary|avoid)/i.test(creativeNorthStar)) {
+    errors.push('Creative North Star should name a feeling, signature moment, or taste boundary.');
+  }
+
   const coreLoopBullets = countBullets(sectionAfter(text, 'Core Loop'));
   if (coreLoopBullets < 4 || coreLoopBullets > 6) {
     errors.push(`Core Loop should contain 4-6 bullets, found ${coreLoopBullets}.`);
@@ -76,6 +86,7 @@ export function validatePillarContract(text, options = {}) {
     stats: {
       nonEmptyLines: lines.length,
       intentBullets,
+      creativeNorthStarWords,
       coreLoopBullets,
       pillarHeadings,
       moduleHeadings
@@ -94,7 +105,7 @@ export async function validatePillarFile(path, options = {}) {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const path = process.argv[2];
   if (!path) {
-    console.error('Usage: node skills/playable-game-build-flow/scripts/validate-pillar.mjs <pillar.md>');
+    console.error('Usage: node <path-to-this-skill>/scripts/validate-pillar.mjs <pillar.md>');
     process.exit(2);
   }
 

@@ -1,6 +1,6 @@
 ---
 name: playable-game-build-flow
-description: Build a small playable browser-game vertical slice through intent capture, a pillar contract, scoped implementation, and a P0 self-check.
+description: Build a polished small browser-game vertical slice by translating the user's creative inspiration into a creative north star, a pillar contract, scoped implementation, and a P0 self-check.
 category: game-build-workflow
 dependencies: []
 inputs:
@@ -9,30 +9,38 @@ inputs:
   - optional engine preference
   - optional docs directory
 outputs:
+  - creative north-star summary
   - pillar contract markdown
   - scoped playable-slice implementation plan
   - P0 self-check result
 examples:
-  - Ask the agent to turn a one-sentence arcade game idea into a first playable PixiJS or Three.js vertical slice.
-  - node skills/playable-game-build-flow/scripts/validate-pillar.mjs docs/meteor-dash-pillar.md
+  - Ask the agent to turn a one-sentence arcade game inspiration into a first playable PixiJS or Three.js vertical slice.
+  - node <path-to-this-skill>/scripts/validate-pillar.mjs docs/meteor-dash-pillar.md
 ---
 
 # Playable Game Build Flow
 
-Use this skill for a new small browser game or a major prototype reset where the user wants a playable vertical slice, not a broad design document.
+Use this skill for a new small browser game or a major prototype reset where the user wants a playable vertical slice that preserves the user's creative inspiration, not a broad design document.
 
-Optimize for the first game loop the player can actually try. Keep the session tight: ask only the questions needed, write only the files needed for the slice, and validate player-facing behavior before finishing.
+Optimize for the first game loop the player can actually try and remember. Keep the session tight: ask only the questions needed, translate inspiration into concrete play decisions, write only the files needed for the slice, and validate player-facing behavior before finishing.
 
-## Phase 1: Intent Capture
+## Phase 1: Creative Intent Capture
 
-For a new game, ask one compact question set before templates or code. Cover only:
+For a new game, ask one compact inspiration-to-game question set before templates or code.
 
-- core fun
-- 2-4 player-facing pillars or tradeoffs
-- broad visual identity
-- optional complexity limit
+If the runtime exposes a structured user-question tool such as `ask_user`, `ask_user_question`, or `request_user_input`, use that tool for this phase. If no structured user-question tool is available, ask the same compact question set in normal chat. If the initial brief already answers the items below, summarize the inferred answers and continue without asking again.
 
-Do not ask about engine, platform, control scheme, module boundaries, level list, story details, or asset procurement unless the user already brought them up. If the user skips details, choose sensible defaults and continue.
+Cover only:
+
+- memorable player feeling or fantasy
+- signature moment the first minute should contain
+- 2-4 player-facing pillars or taste tradeoffs
+- visual/audio references, mood words, or anti-references
+- optional first-slice complexity limit
+
+Do not flatten unusual inspiration into a generic genre label. Preserve the user's specific metaphors, tensions, and taste boundaries, then convert them into playable decisions. If the user references an existing game or artwork, capture what to borrow and what to avoid.
+
+Do not ask about engine, platform, control scheme, module boundaries, level list, story details, or asset procurement unless the user already brought them up. If the user skips details or gives partial answers, choose sensible defaults when safe and continue. Keep follow-up questions rare and only use them when the missing answer would materially change the first playable slice.
 
 ## Phase 2: Pillar Contract
 
@@ -45,6 +53,9 @@ Use this structure:
 
 ## Intent
 - 3-8 player-facing bullets
+
+## Creative North Star
+1-2 sentences naming the remembered feeling, signature first-minute moment, and taste boundary.
 
 ## Core Fun
 1-2 sentences.
@@ -65,11 +76,21 @@ Engine choice and visual baseline.
 - Watch-out: the easiest way this module can sprawl or break the slice
 ```
 
-Validate the file before moving on:
+Validate the file before moving on. The validator is bundled with this skill, not with the target game project. Do not assume `skills/playable-game-build-flow/...` exists under the project root. Resolve `scripts/validate-pillar.mjs` relative to this skill's installed directory and run it with the pillar file path:
 
 ```bash
-node skills/playable-game-build-flow/scripts/validate-pillar.mjs docs/<slug>-pillar.md
+node <path-to-this-skill>/scripts/validate-pillar.mjs docs/<slug>-pillar.md
 ```
+
+If the runtime cannot expose bundled skill files as executable paths, validate manually against the same rules and explicitly say the script was not run. Manual fallback checklist:
+
+- title is shaped `# Game Name - Pillar Contract`
+- required sections are present: `Intent`, `Creative North Star`, `Core Fun`, `Pillars`, `Core Loop`, `Art Direction`, `Modules`
+- `Intent` has 3-8 player-facing bullets
+- `Creative North Star` names the player feeling, signature moment, and taste boundary
+- `Core Loop` has 4-6 player action nodes
+- `Pillars` has 2-4 kebab-case subsections
+- `Modules` has 2-4 kebab-case subsections with `Carries` and `Watch-out`
 
 Engine default:
 
@@ -95,10 +116,12 @@ Avoid broad source sweeps before the playable loop exists.
 
 Build one vertical slice:
 
+- implement the signature moment from the creative north star as early as possible
 - implement the core loop from the pillar contract
 - create only the modules needed for that loop
-- add lightweight audio or juice after the loop works unless audio is the core mechanic
+- add lightweight audio, animation, particles, camera motion, or tactile feedback after the loop works when it reinforces the creative north star
 - preserve template-owned renderer, input, lifecycle, and asset paths
+- remove generic template leftovers that conflict with the user's intended feeling
 
 Runtime rules:
 
@@ -122,13 +145,16 @@ Scope control:
 Before the final response, inspect code and, when practical, run the local app or tests. Confirm:
 
 - first frame is not blank
+- the signature moment can occur within the first minute
 - player can move or perform the core action
 - there is a main goal, threat, resource pressure, or scoring pressure
+- at least one sensory detail supports the creative north star
 - engine choice matches the pillar contract
 - camera and movement feel coherent
 - pointer aiming or placement uses world coordinates
 - HUD is bounded, readable, and not overlapping
 - long-running audio is managed through a lifecycle, not loose repeated playback
+- final response reports the playtest path, checks run, and any P0 item that could not be verified
 
 If a P0 item fails, fix that concrete issue before finishing.
 

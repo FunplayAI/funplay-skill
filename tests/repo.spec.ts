@@ -95,6 +95,31 @@ describe('repo structure', () => {
     }
   });
 
+  it('requires structured intent capture when available', () => {
+    const text = readFileSync('skills/playable-game-build-flow/SKILL.md', 'utf8');
+    expect(text).toContain('ask_user');
+    expect(text).toContain('ask_user_question');
+    expect(text).toContain('request_user_input');
+    expect(text).toContain('use that tool for this phase');
+    expect(text).toContain('Keep follow-up questions rare');
+  });
+
+  it('preserves creative inspiration as a first-class build input', () => {
+    const text = readFileSync('skills/playable-game-build-flow/SKILL.md', 'utf8');
+    expect(text).toContain('Creative North Star');
+    expect(text).toContain('signature moment');
+    expect(text).toContain('Do not flatten unusual inspiration into a generic genre label');
+    expect(text).toContain('at least one sensory detail supports the creative north star');
+  });
+
+  it('documents bundled validator path handling', () => {
+    const text = readFileSync('skills/playable-game-build-flow/SKILL.md', 'utf8');
+    expect(text).toContain('bundled with this skill');
+    expect(text).toContain('Do not assume');
+    expect(text).toContain('<path-to-this-skill>/scripts/validate-pillar.mjs');
+    expect(text).toContain('script was not run');
+  });
+
   it('ships only validated skills', () => {
     const expectedSkillDirs = [
       'audio-format-convert',
