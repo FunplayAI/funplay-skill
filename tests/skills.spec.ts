@@ -80,10 +80,6 @@ describe('playable-game-build-flow skill', () => {
 - Chase score streaks that tempt risky routes.
 - Keep each run readable within the first second.
 
-## Creative North Star
-The memorable feeling is a tiny pilot threading impossible space traffic, with a signature first-minute moment where a risky pickup path opens inside a collapsing hazard lane.
-Avoid muddy neon effects that make the fair route unreadable.
-
 ## Core Fun
 Threading through danger should feel immediate and fair.
 The player should always see why a run was lost.

@@ -20,7 +20,7 @@ FunPlay Skill is a game-development skills library for coding agents, inspired b
 
 ### Game Build Workflow
 
-- `skills/playable-game-build-flow`: translate creative inspiration into a polished small browser-game vertical slice
+- `skills/playable-game-build-flow`: guide a small browser game from intent capture to a playable vertical slice
 
 ### Engine Workflow
 
@@ -94,7 +94,7 @@ CI runs the same test and workspace validation commands.
 
 ### Game Build Workflow
 
-- `playable-game-build-flow`: translate a one-sentence game inspiration into a polished playable vertical slice, with the bundled `node <path-to-this-skill>/scripts/validate-pillar.mjs <pillar.md>` for pillar-contract checks
+- `playable-game-build-flow`: guide a small browser game from a one-sentence idea to a playable vertical slice, with the bundled `node <path-to-this-skill>/scripts/validate-pillar.mjs <pillar.md>` for pillar-contract checks
 
 ### Engine Workflow
 

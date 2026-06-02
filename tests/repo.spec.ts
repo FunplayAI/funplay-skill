@@ -104,14 +104,6 @@ describe('repo structure', () => {
     expect(text).toContain('Keep follow-up questions rare');
   });
 
-  it('preserves creative inspiration as a first-class build input', () => {
-    const text = readFileSync('skills/playable-game-build-flow/SKILL.md', 'utf8');
-    expect(text).toContain('Creative North Star');
-    expect(text).toContain('signature moment');
-    expect(text).toContain('Do not flatten unusual inspiration into a generic genre label');
-    expect(text).toContain('at least one sensory detail supports the creative north star');
-  });
-
   it('documents bundled validator path handling', () => {
     const text = readFileSync('skills/playable-game-build-flow/SKILL.md', 'utf8');
     expect(text).toContain('bundled with this skill');
