@@ -26,7 +26,7 @@ examples:
 
 - Write for agent consumption first: short, direct, explicit instructions.
 - Describe when to use the skill, not just what the script does.
-- Set `category` to one of `asset-processing`, `game-build-workflow`, `engine-workflow`, or `meta-routing`.
+- Set `category` to one of `asset-processing`, `game-build-workflow`, `game-design-workflow`, `ui-asset-workflow`, `engine-workflow`, `cocos-engine`, or `meta-routing`.
 - List runtime dependencies, including system tools such as `ffmpeg`.
 - Document accepted input formats, produced outputs, and common failure cases.
 - Keep scripts deterministic so repeated runs generate predictable filenames.

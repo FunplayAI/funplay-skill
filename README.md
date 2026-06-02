@@ -22,9 +22,25 @@ FunPlay Skill is a game-development skills library for coding agents, inspired b
 
 - `skills/playable-game-build-flow`: guide a small browser game from intent capture to a playable vertical slice
 
+### Game Design Workflow
+
+- `skills/game-concept-brief`: turn early game inspiration into a compact GDD-lite concept brief
+
+### UI Asset Workflow
+
+- `skills/game-ui-asset-brief`: produce game UI asset prompts, cutout requirements, and validation checks
+
 ### Engine Workflow
 
 - `skills/unity-mcp-workflow`: use Funplay Unity MCP as the edit, compile, Play Mode, screenshot, and readback loop
+
+### Cocos Engine
+
+- `skills/minigame-subpackage-rules`: validate WeChat/Douyin minigame subpackage rules
+- `skills/canvas-page-popup-bootstrap`: validate and guide new Cocos page, popup, or HUD canvas entries
+- `skills/canvas-page-popup-removal`: check blockers before removing page or popup canvas nodes
+- `skills/cocos-ui-node-retrofit`: classify and plan safe Cocos UI node retrofits
+- `skills/workbench-asset-replace`: plan safe Workbench asset replacement into Cocos visuals
 
 ### Meta Routing
 
@@ -96,9 +112,25 @@ CI runs the same test and workspace validation commands.
 
 - `playable-game-build-flow`: guide a small browser game from a one-sentence idea to a playable vertical slice, with the bundled `node <path-to-this-skill>/scripts/validate-pillar.mjs <pillar.md>` for pillar-contract checks
 
+### Game Design Workflow
+
+- `game-concept-brief`: `node skills/game-concept-brief/scripts/build-brief.mjs --prompt "<game idea>"`
+
+### UI Asset Workflow
+
+- `game-ui-asset-brief`: `node skills/game-ui-asset-brief/scripts/build-brief.mjs --style "<art direction>" --asset background --asset button_skin`
+
 ### Engine Workflow
 
 - `unity-mcp-workflow`: use when a Unity project is connected to Funplay MCP and needs compile, Play Mode, screenshot, hierarchy, console, or prefab/scene readback verification
+
+### Cocos Engine
+
+- `minigame-subpackage-rules`: `node skills/minigame-subpackage-rules/scripts/validate-minigame-subpackages.mjs profiles/v2/packages/project.json --platform wechatgame`
+- `canvas-page-popup-bootstrap`: `node skills/canvas-page-popup-bootstrap/scripts/validate-canvas-entry.mjs canvas/canvas.json page:shop`
+- `canvas-page-popup-removal`: `node skills/canvas-page-popup-removal/scripts/check-removal-blockers.mjs canvas/canvas.json popup:coupon`
+- `cocos-ui-node-retrofit`: `node skills/cocos-ui-node-retrofit/scripts/classify-retrofit.mjs --intent "<change>" --component cc.Label`
+- `workbench-asset-replace`: `node skills/workbench-asset-replace/scripts/plan-asset-replace.mjs --source "<asset>" --target-label GeneratedBackground`
 
 ### Meta Routing
 

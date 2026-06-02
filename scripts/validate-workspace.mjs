@@ -53,9 +53,12 @@ const skillTests = existsSync('tests/skills.spec.ts') ? readFileSync('tests/skil
 const frontmatterKeys = ['name', 'description', 'category', 'dependencies', 'inputs', 'outputs', 'examples'];
 const allowedCategories = new Set([
   'asset-processing',
+  'cocos-engine',
   'game-build-workflow',
+  'game-design-workflow',
   'engine-workflow',
-  'meta-routing'
+  'meta-routing',
+  'ui-asset-workflow'
 ]);
 
 if (existsSync(skillsRoot)) {

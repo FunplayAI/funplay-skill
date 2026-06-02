@@ -50,9 +50,12 @@ describe('repo structure', () => {
     const requiredKeys = ['name', 'description', 'category', 'dependencies', 'inputs', 'outputs', 'examples'];
     const allowedCategories = new Set([
       'asset-processing',
+      'cocos-engine',
       'game-build-workflow',
+      'game-design-workflow',
       'engine-workflow',
-      'meta-routing'
+      'meta-routing',
+      'ui-asset-workflow'
     ]);
     const skillDirs = readdirSync('skills', { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
@@ -82,11 +85,18 @@ describe('repo structure', () => {
   it('keeps skill categories stable', () => {
     const expectedCategories = {
       'audio-format-convert': 'asset-processing',
+      'canvas-page-popup-bootstrap': 'cocos-engine',
+      'canvas-page-popup-removal': 'cocos-engine',
+      'cocos-ui-node-retrofit': 'cocos-engine',
+      'game-concept-brief': 'game-design-workflow',
+      'game-ui-asset-brief': 'ui-asset-workflow',
+      'minigame-subpackage-rules': 'cocos-engine',
       'normal-map': 'asset-processing',
       'playable-game-build-flow': 'game-build-workflow',
       'sprite-sheet': 'asset-processing',
       'unity-mcp-workflow': 'engine-workflow',
-      'using-funplay-skills': 'meta-routing'
+      'using-funplay-skills': 'meta-routing',
+      'workbench-asset-replace': 'cocos-engine'
     };
 
     for (const [skillName, category] of Object.entries(expectedCategories)) {
@@ -115,11 +125,18 @@ describe('repo structure', () => {
   it('ships only validated skills', () => {
     const expectedSkillDirs = [
       'audio-format-convert',
+      'canvas-page-popup-bootstrap',
+      'canvas-page-popup-removal',
+      'cocos-ui-node-retrofit',
+      'game-concept-brief',
+      'game-ui-asset-brief',
+      'minigame-subpackage-rules',
       'normal-map',
       'playable-game-build-flow',
       'sprite-sheet',
       'unity-mcp-workflow',
-      'using-funplay-skills'
+      'using-funplay-skills',
+      'workbench-asset-replace'
     ];
     const actualSkillDirs = readdirSync('skills', { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
@@ -129,7 +146,19 @@ describe('repo structure', () => {
     expect(actualSkillDirs).toEqual(expectedSkillDirs);
 
     const skillTests = readFileSync('tests/skills.spec.ts', 'utf8');
-    for (const skillName of ['audio-format-convert', 'normal-map', 'playable-game-build-flow', 'sprite-sheet']) {
+    for (const skillName of [
+      'audio-format-convert',
+      'canvas-page-popup-bootstrap',
+      'canvas-page-popup-removal',
+      'cocos-ui-node-retrofit',
+      'game-concept-brief',
+      'game-ui-asset-brief',
+      'minigame-subpackage-rules',
+      'normal-map',
+      'playable-game-build-flow',
+      'sprite-sheet',
+      'workbench-asset-replace'
+    ]) {
       expect(existsSync(join('skills', skillName, 'scripts')), `${skillName} should have scripts`).toBe(true);
       expect(skillTests, `${skillName} should have script tests`).toContain(`../skills/${skillName}/`);
     }

@@ -6,9 +6,16 @@ import { spawnSync } from 'node:child_process';
 import sharp from 'sharp';
 import { describe, expect, it } from 'vitest';
 import { convertAudio, ensureFfmpeg } from '../skills/audio-format-convert/scripts/convert.mjs';
+import { validateCanvasEntry } from '../skills/canvas-page-popup-bootstrap/scripts/validate-canvas-entry.mjs';
+import { checkRemovalBlockers } from '../skills/canvas-page-popup-removal/scripts/check-removal-blockers.mjs';
+import { classifyRetrofitIntent } from '../skills/cocos-ui-node-retrofit/scripts/classify-retrofit.mjs';
+import { buildConceptBrief } from '../skills/game-concept-brief/scripts/build-brief.mjs';
+import { buildUiAssetBrief } from '../skills/game-ui-asset-brief/scripts/build-brief.mjs';
+import { validateMinigameSubpackagesConfig } from '../skills/minigame-subpackage-rules/scripts/validate-minigame-subpackages.mjs';
 import { generateNormalMap } from '../skills/normal-map/scripts/generate.mjs';
 import { validatePillarContract } from '../skills/playable-game-build-flow/scripts/validate-pillar.mjs';
 import { sliceSpriteSheet } from '../skills/sprite-sheet/scripts/slice.mjs';
+import { planAssetReplacement } from '../skills/workbench-asset-replace/scripts/plan-asset-replace.mjs';
 
 async function createSpriteSheet(tempDir) {
   const source = join(tempDir, 'sheet.png');
@@ -137,5 +144,126 @@ Fun.
 
     expect(result.ok).toBe(false);
     expect(result.errors.length).toBeGreaterThan(0);
+  });
+});
+
+describe('game-concept-brief skill', () => {
+  it('builds a concept brief with creative and playable gates', () => {
+    const result = buildConceptBrief({
+      prompt: 'a browser game about protecting a lamp in heavy rain',
+      platform: 'web',
+      style: 'rainy paper-cut fantasy'
+    });
+
+    expect(result.status).toBe('ok');
+    expect(result.inferred.platform).toBe('web');
+    expect(result.markdownTemplate).toContain('Creative North Star');
+    expect(result.readinessGates).toContain('10-30 second core loop is testable.');
+  });
+});
+
+describe('game-ui-asset-brief skill', () => {
+  it('marks foreground UI for cutout and backgrounds as full-screen assets', () => {
+    const result = buildUiAssetBrief({
+      style: 'rainy cozy fantasy UI',
+      assets: ['background', 'button_skin']
+    });
+
+    const background = result.assets.find((asset) => asset.asset === 'background');
+    const button = result.assets.find((asset) => asset.asset === 'button_skin');
+
+    expect(background?.cutoutRequired).toBe(false);
+    expect(button?.role).toBe('button_wide');
+    expect(button?.cutoutRequired).toBe(true);
+  });
+});
+
+describe('minigame-subpackage-rules skill', () => {
+  it('validates configured minigame subpackage groups', () => {
+    const result = validateMinigameSubpackagesConfig({
+      minigameSubpackages: {
+        wechatgame: { groups: [{ name: 'battle', root: 'db://assets/bundles/battle' }] },
+        'bytedance-mini-game': { groups: [] }
+      }
+    }, { platform: 'wechatgame', requireGroups: true });
+
+    expect(result.ok).toBe(true);
+    expect(result.stats.groupCount).toBe(1);
+  });
+
+  it('distinguishes empty template from missing template', () => {
+    const result = validateMinigameSubpackagesConfig({
+      minigameSubpackages: {
+        wechatgame: { groups: [] },
+        'bytedance-mini-game': { groups: [] }
+      }
+    }, { platform: 'wechatgame' });
+
+    expect(result.ok).toBe(true);
+    expect(result.warnings[0]).toContain('default template');
+  });
+});
+
+describe('cocos engine workflow skills', () => {
+  const canvas = {
+    version: 'v0',
+    nodes: [
+      { id: 'page:home', type: 'page', title: 'Home', pos: { x: 0, y: 0 }, entry: 'assets/ui/pages/home/home.prefab' },
+      { id: 'popup:coupon', type: 'popup', title: 'Coupon', pos: { x: 240, y: 0 }, entry: 'assets/ui/popups/coupon/coupon.prefab', parent_id: 'page:home' }
+    ],
+    flow: {
+      root_node_id: 'page:home',
+      edges: [{ from: 'page:home', to: 'popup:coupon', kind: 'opens_popup' }]
+    }
+  };
+
+  it('validates canonical page and popup entries', () => {
+    expect(validateCanvasEntry(canvas, 'page:home').ok).toBe(true);
+
+    const bad = validateCanvasEntry({
+      version: 'v0',
+      nodes: [{ id: 'page:bad', type: 'page', title: 'Bad', pos: { x: 0, y: 0 }, entry: 'assets/main.scene' }]
+    }, 'page:bad');
+    expect(bad.ok).toBe(false);
+    expect(bad.errors[0]).toContain('authored');
+  });
+
+  it('reports removal blockers before canvas node deletion', () => {
+    const blocked = checkRemovalBlockers(canvas, 'page:home');
+    expect(blocked.canDelete).toBe(false);
+    expect(blocked.blockers.map((blocker) => blocker.kind)).toContain('child_node');
+    expect(blocked.blockers.map((blocker) => blocker.kind)).toContain('flow_root');
+
+    const removable = checkRemovalBlockers(canvas, 'popup:coupon');
+    expect(removable.canDelete).toBe(true);
+    expect(removable.referencingEdges).toBe(1);
+  });
+
+  it('classifies Cocos UI retrofit intent', () => {
+    const result = classifyRetrofitIntent({
+      intent: 'replace label with image-backed start button',
+      components: ['cc.Label'],
+      sourceAsset: 'assets/ui/start.png',
+      actionable: true
+    });
+
+    expect(result.classification).toBe('structure-retrofit');
+    expect(result.recommendedShape[0]).toContain('Sprite');
+    expect(result.requiredProof.join(' ')).toContain('Button');
+  });
+
+  it('plans Workbench asset replacement for generated and static targets', () => {
+    const runtime = planAssetReplacement({
+      source: 'workbench://asset/123',
+      targetLabel: 'GeneratedBackground'
+    });
+    expect(runtime.targetKind).toBe('runtime-generated-slot');
+
+    const staticTarget = planAssetReplacement({
+      source: 'workbench://asset/456',
+      targetLabel: 'Canvas/Home/StartButton',
+      hasStaticSprite: true
+    });
+    expect(staticTarget.targetKind).toBe('static-sprite-node');
   });
 });
