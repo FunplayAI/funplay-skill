@@ -15,6 +15,7 @@ describe('repo structure', () => {
     expect(existsSync('hooks/hooks.json')).toBe(true);
     expect(existsSync('hooks/hooks-cursor.json')).toBe(true);
     expect(existsSync('docs/skill-spec.md')).toBe(true);
+    expect(existsSync('README.zh-CN.md')).toBe(true);
     expect(existsSync('CHANGELOG.md')).toBe(true);
     expect(existsSync('CONTRIBUTING.md')).toBe(true);
     expect(existsSync('RELEASE_CHECKLIST.md')).toBe(true);
@@ -47,6 +48,7 @@ describe('repo structure', () => {
 
   it('keeps every skill documented with complete metadata', () => {
     const readme = readFileSync('README.md', 'utf8');
+    const zhReadme = readFileSync('README.zh-CN.md', 'utf8');
     const requiredKeys = ['name', 'description', 'category', 'dependencies', 'inputs', 'outputs', 'examples'];
     const allowedCategories = new Set([
       'asset-processing',
@@ -79,7 +81,18 @@ describe('repo structure', () => {
       expect(declaredName).toBe(skillName);
       expect(allowedCategories.has(declaredCategory ?? '')).toBe(true);
       expect(readme, `README.md should list skills/${skillName}`).toContain(`skills/${skillName}`);
+      expect(zhReadme, `README.zh-CN.md should list skills/${skillName}`).toContain(`skills/${skillName}`);
     }
+  });
+
+  it('links English and Chinese READMEs', () => {
+    const readme = readFileSync('README.md', 'utf8');
+    const zhReadme = readFileSync('README.zh-CN.md', 'utf8');
+
+    expect(readme).toContain('README.zh-CN.md');
+    expect(zhReadme).toContain('README.md');
+    expect(readme).toContain('Skills catalog');
+    expect(zhReadme).toContain('Skills 目录');
   });
 
   it('keeps skill categories stable', () => {

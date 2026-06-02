@@ -12,6 +12,7 @@ const requiredPaths = [
   '.opencode/INSTALL.md',
   'CHANGELOG.md',
   'CONTRIBUTING.md',
+  'README.zh-CN.md',
   'gemini-extension.json',
   'GEMINI.md',
   'hooks/hooks.json',
@@ -49,6 +50,7 @@ if (missing.length > 0) {
 
 const skillsRoot = 'skills';
 const readme = existsSync('README.md') ? readFileSync('README.md', 'utf8') : '';
+const zhReadme = existsSync('README.zh-CN.md') ? readFileSync('README.zh-CN.md', 'utf8') : '';
 const skillTests = existsSync('tests/skills.spec.ts') ? readFileSync('tests/skills.spec.ts', 'utf8') : '';
 const frontmatterKeys = ['name', 'description', 'category', 'dependencies', 'inputs', 'outputs', 'examples'];
 const allowedCategories = new Set([
@@ -103,6 +105,9 @@ if (existsSync(skillsRoot)) {
 
     if (!readme.includes(`skills/${skillName}`)) {
       errors.push(`README.md does not list skills/${skillName}`);
+    }
+    if (!zhReadme.includes(`skills/${skillName}`)) {
+      errors.push(`README.zh-CN.md does not list skills/${skillName}`);
     }
 
     const hasScripts = existsSync(join(skillsRoot, skillName, 'scripts'));

@@ -1,50 +1,41 @@
-# FunPlay Skill
+<p align="center">
+  <h1 align="center">FunPlay Skill</h1>
+  <p align="center">
+    <strong>Reusable game-development skills for coding agents</strong>
+  </p>
+  <p align="center">
+    English · <a href="./README.zh-CN.md">简体中文</a>
+  </p>
+  <p align="center">
+    <img src="https://img.shields.io/badge/Skills-13-blue" alt="13 skills" />
+    <img src="https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white" alt="Node.js 18+" />
+    <img src="https://img.shields.io/badge/License-MIT-green" alt="MIT License" />
+  </p>
+</p>
 
-FunPlay Skill is a game-development skills library for coding agents, inspired by `obra/superpowers` but focused on art, audio, engine workflows, and asset-processing instead of MCP servers.
+FunPlay Skill is a game-development skills library for coding agents, focused on reusable workflows for game design, assets, browser-game slices, and engine-specific validation.
 
-## What this repository is
+## Skills catalog
 
-- A verified multi-agent skills library for game-development workflows
-- A Claude Code / Cursor plugin with native skills, commands, and hooks
-- A Codex, OpenCode, and Gemini compatible repository with install guides
-- A collection of local asset-processing workflows under `skills/`
-- A lightweight plugin shell with adapters, hooks, commands, docs, and tests
+The repository currently ships these verified skills:
 
-## What is inside
+| Category | Skill | Use when | Validation surface |
+| --- | --- | --- | --- |
+| Asset Processing | `skills/sprite-sheet` | Split a sprite sheet into numbered frame images | `scripts/slice.mjs` plus tests |
+| Asset Processing | `skills/normal-map` | Generate a tangent-space normal map from a diffuse texture | `scripts/generate.mjs` plus tests |
+| Asset Processing | `skills/audio-format-convert` | Convert audio between `wav`, `ogg`, and `mp3` | `scripts/convert.mjs` plus tests |
+| Game Design Workflow | `skills/game-concept-brief` | Turn early game inspiration into a compact GDD-lite / MDA / MVP brief | `scripts/build-brief.mjs` plus tests |
+| Game Build Workflow | `skills/playable-game-build-flow` | Guide a small browser game from intent capture to a playable vertical slice | `scripts/validate-pillar.mjs` plus tests |
+| UI Asset Workflow | `skills/game-ui-asset-brief` | Produce game UI asset prompts, cutout requirements, and validation checks | `scripts/build-brief.mjs` plus tests |
+| Engine Workflow | `skills/unity-mcp-workflow` | Use Funplay Unity MCP for edit, compile, Play Mode, screenshot, hierarchy, and console verification | verified upstream source |
+| Cocos Engine | `skills/minigame-subpackage-rules` | Validate WeChat/Douyin minigame subpackage rules | `scripts/validate-minigame-subpackages.mjs` plus tests |
+| Cocos Engine | `skills/canvas-page-popup-bootstrap` | Create or validate new Cocos page, popup, or HUD canvas entries | `scripts/validate-canvas-entry.mjs` plus tests |
+| Cocos Engine | `skills/canvas-page-popup-removal` | Check blockers before removing existing page or popup canvas nodes | `scripts/check-removal-blockers.mjs` plus tests |
+| Cocos Engine | `skills/cocos-ui-node-retrofit` | Classify and plan safe Cocos UI node retrofits | `scripts/classify-retrofit.mjs` plus tests |
+| Cocos Engine | `skills/workbench-asset-replace` | Plan safe Workbench asset replacement into Cocos visuals | `scripts/plan-asset-replace.mjs` plus tests |
+| Meta Routing | `skills/using-funplay-skills` | Choose the right FunPlay skill for a user goal | repository routing policy |
 
-### Asset Processing
-
-- `skills/sprite-sheet`: split one sprite sheet into numbered frame images
-- `skills/normal-map`: generate a normal map from a diffuse texture
-- `skills/audio-format-convert`: convert audio between `wav`, `ogg`, and `mp3`
-
-### Game Build Workflow
-
-- `skills/playable-game-build-flow`: guide a small browser game from intent capture to a playable vertical slice
-
-### Game Design Workflow
-
-- `skills/game-concept-brief`: turn early game inspiration into a compact GDD-lite concept brief
-
-### UI Asset Workflow
-
-- `skills/game-ui-asset-brief`: produce game UI asset prompts, cutout requirements, and validation checks
-
-### Engine Workflow
-
-- `skills/unity-mcp-workflow`: use Funplay Unity MCP as the edit, compile, Play Mode, screenshot, and readback loop
-
-### Cocos Engine
-
-- `skills/minigame-subpackage-rules`: validate WeChat/Douyin minigame subpackage rules
-- `skills/canvas-page-popup-bootstrap`: validate and guide new Cocos page, popup, or HUD canvas entries
-- `skills/canvas-page-popup-removal`: check blockers before removing page or popup canvas nodes
-- `skills/cocos-ui-node-retrofit`: classify and plan safe Cocos UI node retrofits
-- `skills/workbench-asset-replace`: plan safe Workbench asset replacement into Cocos visuals
-
-### Meta Routing
-
-- `skills/using-funplay-skills`: onboarding and usage guidance for the library
+Use `skills/using-funplay-skills` when the right workflow is unclear.
 
 ### Repository Support
 
