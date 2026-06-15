@@ -7,7 +7,7 @@
     English · <a href="./README.zh-CN.md">简体中文</a>
   </p>
   <p align="center">
-    <img src="https://img.shields.io/badge/Skills-13-blue" alt="13 skills" />
+    <img src="https://img.shields.io/badge/Skills-14-blue" alt="14 skills" />
     <img src="https://img.shields.io/badge/Node.js-18%2B-339933?logo=node.js&logoColor=white" alt="Node.js 18+" />
     <img src="https://img.shields.io/badge/License-MIT-green" alt="MIT License" />
   </p>
@@ -28,6 +28,7 @@ The repository currently ships these verified skills:
 | Game Build Workflow | `skills/playable-game-build-flow` | Guide a small browser game from intent capture to a playable vertical slice | `scripts/validate-pillar.mjs` plus tests |
 | UI Asset Workflow | `skills/game-ui-asset-brief` | Produce game UI asset prompts, cutout requirements, and validation checks | `scripts/build-brief.mjs` plus tests |
 | Engine Workflow | `skills/unity-mcp-workflow` | Use Funplay Unity MCP for edit, compile, Play Mode, screenshot, hierarchy, and console verification | verified upstream source |
+| Engine Workflow | `skills/commercial-unity-game` | Plan or audit commercial-grade Unity mobile/F2P games beyond prototype scope | `scripts/validate-commercial-plan.mjs` plus tests |
 | Cocos Engine | `skills/minigame-subpackage-rules` | Validate WeChat/Douyin minigame subpackage rules | `scripts/validate-minigame-subpackages.mjs` plus tests |
 | Cocos Engine | `skills/canvas-page-popup-bootstrap` | Create or validate new Cocos page, popup, or HUD canvas entries | `scripts/validate-canvas-entry.mjs` plus tests |
 | Cocos Engine | `skills/canvas-page-popup-removal` | Check blockers before removing existing page or popup canvas nodes | `scripts/check-removal-blockers.mjs` plus tests |
@@ -114,6 +115,7 @@ CI runs the same test and workspace validation commands.
 ### Engine Workflow
 
 - `unity-mcp-workflow`: use when a Unity project is connected to Funplay MCP and needs compile, Play Mode, screenshot, hierarchy, console, or prefab/scene readback verification
+- `commercial-unity-game`: `node skills/commercial-unity-game/scripts/validate-commercial-plan.mjs <plan.md>`
 
 ### Cocos Engine
 

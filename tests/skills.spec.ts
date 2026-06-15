@@ -9,6 +9,7 @@ import { convertAudio, ensureFfmpeg } from '../skills/audio-format-convert/scrip
 import { validateCanvasEntry } from '../skills/canvas-page-popup-bootstrap/scripts/validate-canvas-entry.mjs';
 import { checkRemovalBlockers } from '../skills/canvas-page-popup-removal/scripts/check-removal-blockers.mjs';
 import { classifyRetrofitIntent } from '../skills/cocos-ui-node-retrofit/scripts/classify-retrofit.mjs';
+import { validateCommercialPlan } from '../skills/commercial-unity-game/scripts/validate-commercial-plan.mjs';
 import { buildConceptBrief } from '../skills/game-concept-brief/scripts/build-brief.mjs';
 import { buildUiAssetBrief } from '../skills/game-ui-asset-brief/scripts/build-brief.mjs';
 import { validateMinigameSubpackagesConfig } from '../skills/minigame-subpackage-rules/scripts/validate-minigame-subpackages.mjs';
@@ -159,6 +160,64 @@ describe('game-concept-brief skill', () => {
     expect(result.inferred.platform).toBe('web');
     expect(result.markdownTemplate).toContain('Creative North Star');
     expect(result.readinessGates).toContain('10-30 second core loop is testable.');
+  });
+});
+
+describe('commercial-unity-game skill', () => {
+  it('validates a commercial Unity production plan', () => {
+    const plan = `# Rainforge Puzzle - Commercial Unity Plan
+
+## Core Loop
+Players clear weather tiles, earn coins, and choose whether to spend boosters before the next board.
+
+## Architecture
+Use a Unity framework with controllers, models, panels, a typed event bus, and shared services.
+
+## Bootstrap
+GameInit owns the initialization order for storage, content, economy, audio, analytics, and UI routing.
+
+## Save And Persistence
+Player level, coin balance, inventory, settings, timers, and tutorial flags use Property<T> and Storage.
+
+## Data-Driven Content Pipeline
+Levels, shop products, reward curves, and chapter unlocks import from CSV or JSON into ScriptableObject assets.
+
+## Economy And Currency
+Coins, boosters, sources, sinks, reward curve tuning, and late-game rounding are defined in config.
+
+## Monetization IAP Shop
+The shop catalog stores product ids, localized price display, purchase grant rules, and restore behavior.
+
+## Retention And Meta Progression
+Daily login, streaks, offline reward, and chapter meta-progression give returning players a reason to come back.
+
+## Asset Pipeline And Audio
+Art direction, UI assets, SFX, BGM, reward juice, particles, and sprite import rules are planned together.
+
+## Analytics And Remote Config
+Telemetry covers first session, economy, retention, and stability while remote config tunes economy and feature flags.
+
+## Unity MCP Verification
+Use Funplay MCP to compile, enter Play Mode, inspect console output, capture screenshots, and read back scene state.
+
+## Risks And Readiness
+IAP sandbox, SDK integration, store policy, privacy prompts, and device performance remain manual validation gates.
+`;
+
+    const result = validateCommercialPlan(plan);
+    expect(result.ok).toBe(true);
+    expect(result.stats.gateCount).toBe(result.stats.requiredGateCount);
+  });
+
+  it('rejects a prototype-only Unity note', () => {
+    const result = validateCommercialPlan(`# Tap Blocks
+
+## Core Loop
+Tap blocks and score points.
+`);
+
+    expect(result.ok).toBe(false);
+    expect(result.errors.some((error) => error.includes('economy'))).toBe(true);
   });
 });
 
